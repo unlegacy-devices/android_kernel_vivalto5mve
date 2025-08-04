@@ -15,21 +15,14 @@ jobs:
       run: |
         sudo apt-get install lib32z1
         sudo git clone --depth 1 --branch android-4.4.4_r2.0.1 --single-branch https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.7 /opt/toolchains/arm-eabi-4.7/
-    - name: Building Kernel and DTB
+    - name: Building Kernel
       run: |
-        export BOOT_PATH="arch/arm/boot"
-        export DTC_PATH="scripts/dtc"
         make young2ve3g_hw00_defconfig
         make -j$(nproc --all)
-        wget https://gitlab.com/Grimler/dtbtool-sprd/-/raw/master/dtbtool.c
-        gcc dtbtool.c -o dtbtool
-        rm $BOOT_PATH/dts/*.dtb -f
-        ./dtbtool -o $BOOT_PATH/merged-dtb -p $DTC_PATH -v $BOOT_PATH/dts
     - name: Moving Output # CI only
       run: |
         mkdir -p /home/runner/work/output
         cp arch/arm/boot/zImage /home/runner/work/output/zImage
-        cp arch/arm/boot/merged-dtb /home/runner/work/output/dtb
         find . -name "*.ko" -exec cp {} /home/runner/work/output/ \;
     - name: Uploading Output
       uses: actions/upload-artifact@v4
