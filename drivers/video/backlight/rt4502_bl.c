@@ -29,6 +29,7 @@
 #include <linux/delay.h>
 #include <linux/spinlock.h>
 #include <linux/rtc.h>
+#include "../sprdfb/sprdfb.h"
 
 #include <linux/of.h>
 
